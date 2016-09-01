@@ -1,0 +1,14 @@
+﻿<Chains>
+	<Chain>
+		<Name> Rami Levi - רמי לוי </Name>
+		<ChainId> 1 </ChainId>
+	</Chain>
+	<Chain>
+		<Name> Hatsi Hinam - חצי חינם </Name>
+		<ChainId> 2 </ChainId>
+	</Chain>
+	<Chain>
+		<Name> Keshet Taamim - קשת טעמים </Name>
+		<ChainId> 3 </ChainId>
+	</Chain>
+</Chains>

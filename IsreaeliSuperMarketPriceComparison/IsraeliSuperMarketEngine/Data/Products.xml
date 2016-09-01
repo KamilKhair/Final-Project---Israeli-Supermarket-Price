@@ -1,0 +1,5 @@
+﻿<Products>
+  <Product Id ="1" Name = "נייר טואלט סופט" Manufacturer = "סנו" IsComparable = "true" SearchId = "7290108350197"/>
+  <Product Id ="2" Name = "נייר טואלט סופט" Manufacturer = "סנו" IsComparable = "true" SearchId = "7290108350197"/>
+  <Product Id ="3" Name = "נייר טואלט סופט" Manufacturer = "סנו" IsComparable = "false"/>
+</Products>
