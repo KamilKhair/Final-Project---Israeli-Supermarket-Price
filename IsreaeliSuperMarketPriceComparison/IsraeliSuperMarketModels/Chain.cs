@@ -10,7 +10,12 @@ namespace IsraeliSuperMarketModels
     {
         [DataMember]
         public int Id { get; set; }
+        [DataMember]
         public string Name { get; set; }
+        [DataMember]
+        public IList<IProduct> Max3Products { get; set; }
+        [DataMember]
+        public IList<IProduct> Min3Products { get; set; }
 
         public bool Equals(Chain other)
         {
@@ -18,7 +23,7 @@ namespace IsraeliSuperMarketModels
         }
         public override string ToString()
         {
-            return $"Id = {Id}";
+            return $"ID = {Id}, Name = {Name}";
         }
     }
 }

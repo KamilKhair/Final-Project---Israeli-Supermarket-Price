@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Threading.Tasks;
+using IsraeliSuperMarketEngine.Extensions;
 using IsraeliSuperMarketModels;
 
 namespace IsraeliSuperMarketManager
@@ -46,7 +50,7 @@ namespace IsraeliSuperMarketManager
             }).ContinueWith(x => responseObject);
         }
 
-        public Task<IDictionary<Chain, double>> ComparePricesAsync(Product[] products)
+        public Task<IDictionary<Chain, double>> ComparePricesAsync(IDictionary<Product, int> products)
         {
             IDictionary<Chain, double> responseObject = null;
             return Task.Factory.StartNew(() =>
@@ -55,7 +59,7 @@ namespace IsraeliSuperMarketManager
                 request.Accept = "application/json";
                 request.ContentType = "application/json";
                 request.Method = "POST";
-                var serializer = new DataContractJsonSerializer(typeof(Product[]));
+                var serializer = new DataContractJsonSerializer(typeof(IDictionary<Product, int>));
                 var requestStream = request.GetRequestStream();
                 serializer.WriteObject(requestStream, products);
                 var response = request.GetResponse();
@@ -66,6 +70,23 @@ namespace IsraeliSuperMarketManager
                     responseObject = serializer2.ReadObject(responseStream) as IDictionary<Chain, double>;
                 }
             }).ContinueWith(x => responseObject);
+        }
+
+        public Task<Bitmap> GetImageAsync(int imageId)
+        {
+            string responseObject = null;
+            return Task.Factory.StartNew(() =>
+            {
+                var url = "http://localhost:20997/IsraeliSuperMarketService.svc/Image/" + imageId;
+                var client = new WebClient();
+                client.Headers.Add("Accept", "application/json");
+                var result = client.DownloadString(url);
+                var serializer = new DataContractJsonSerializer(typeof(string));
+                using (var stream = new MemoryStream(Encoding.ASCII.GetBytes(result)))
+                {
+                    responseObject = serializer.ReadObject(stream) as string;
+                }
+            }).ContinueWith(x => responseObject.Base64StringToBitmap());
         }
     }
 }

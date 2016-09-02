@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
@@ -25,15 +26,21 @@ namespace IsraeliSuperMarketEngine
         }
 
         [WebGet(UriTemplate = "/Chains")]
-        public Product[] GetChains()
+        public Chain[] GetChains()
         {
-            return _service.GetProducts();
+            return _service.GetChains();
+        }
+
+        [WebGet(UriTemplate = "/Image/{imageId}")]
+        public string GetImage(string imageId)
+        {
+           return _service.GetImage(int.Parse(imageId));
         }
 
         [WebInvoke(UriTemplate = "/Compare")]
-        public Dictionary<Chain, double> ComparePrices(Product[] products)
+        public Dictionary<Chain, double> ComparePrices(IDictionary<Product, int> products)
         {
-            return null;
+            return _service.ComparePrices(products);
         }
 
         // Add more operations here and mark them with [OperationContract]
