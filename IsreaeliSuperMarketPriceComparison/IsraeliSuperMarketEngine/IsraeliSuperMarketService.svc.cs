@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
@@ -38,7 +39,7 @@ namespace IsraeliSuperMarketEngine
         }
 
         [WebInvoke(UriTemplate = "/Compare")]
-        public Dictionary<Chain, double> ComparePrices(IDictionary<Product, int> products)
+        public Tuple<Chain[], string[]> ComparePrices(Tuple<Product[], int[]> products)
         {
             return _service.ComparePrices(products);
         }

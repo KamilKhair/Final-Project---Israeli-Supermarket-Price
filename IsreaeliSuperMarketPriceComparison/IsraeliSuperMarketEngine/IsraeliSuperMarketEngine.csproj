@@ -55,6 +55,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Chains.xml" />
@@ -77,9 +78,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accessors\KeshetTaamimAccessor.cs" />
+    <Compile Include="Accessors\ShopersalAccessor.cs" />
     <Compile Include="Accessors\RamiLeviAccessor.cs" />
-    <Compile Include="Accessors\HatsiHinamAccessor..cs" />
+    <Compile Include="Accessors\MahsanehashookAccessor.cs" />
     <Compile Include="Data\DataAccess.cs" />
     <Compile Include="Extensions\BitmapExtinsion.cs" />
     <Compile Include="IsraeliSuperMarketService.svc.cs">

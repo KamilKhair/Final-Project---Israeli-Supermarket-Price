@@ -10,7 +10,7 @@ namespace IsraeliSuperMarketManager
     {
         Task<IProduct[]> GetProductsAsync();
         Task<IChain[]> GetChainsAsync();
-        Task<IDictionary<Chain, double>> ComparePricesAsync(IDictionary<Product, int> products);
+        Task<Tuple<Chain[], string[]>> ComparePricesAsync(Tuple<Product[], int[]> products);
         Task<Bitmap> GetImageAsync(int imageId);
     }
 }

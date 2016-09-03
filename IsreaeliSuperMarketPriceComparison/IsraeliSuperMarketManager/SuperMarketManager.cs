@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -50,24 +51,25 @@ namespace IsraeliSuperMarketManager
             }).ContinueWith(x => responseObject);
         }
 
-        public Task<IDictionary<Chain, double>> ComparePricesAsync(IDictionary<Product, int> products)
+        public Task<Tuple<Chain[], string[]>> ComparePricesAsync(Tuple<Product[], int[]> products)
         {
-            IDictionary<Chain, double> responseObject = null;
+            Tuple<Chain[], string[]> responseObject = null;
             return Task.Factory.StartNew(() =>
             {
                 var request = (HttpWebRequest)WebRequest.Create("http://localhost:20997/IsraeliSuperMarketService.svc/Compare");
                 request.Accept = "application/json";
                 request.ContentType = "application/json";
                 request.Method = "POST";
-                var serializer = new DataContractJsonSerializer(typeof(IDictionary<Product, int>));
+                var serializer = new DataContractJsonSerializer(typeof(Tuple<Product[], int[]>));
                 var requestStream = request.GetRequestStream();
                 serializer.WriteObject(requestStream, products);
+                requestStream.Close();
                 var response = request.GetResponse();
                 var responseStream = response.GetResponseStream();
-                var serializer2 = new DataContractJsonSerializer(typeof(IDictionary<Chain, double>));
+                var serializer2 = new DataContractJsonSerializer(typeof(Tuple<Chain[], string[]>));
                 if (responseStream != null)
                 {
-                    responseObject = serializer2.ReadObject(responseStream) as IDictionary<Chain, double>;
+                    responseObject = serializer2.ReadObject(responseStream) as Tuple<Chain[], string[]>;
                 }
             }).ContinueWith(x => responseObject);
         }

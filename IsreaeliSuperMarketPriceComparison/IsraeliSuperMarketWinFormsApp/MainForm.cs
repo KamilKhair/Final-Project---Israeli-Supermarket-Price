@@ -1,7 +1,10 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using IsraeliSuperMarketManager;
+using IsraeliSuperMarketModels;
 using IsraeliSuperMarketWinFormsApp.Properties;
 
 namespace IsraeliSuperMarketWinFormsApp
@@ -19,8 +22,9 @@ namespace IsraeliSuperMarketWinFormsApp
         {
             loadProductsPictureBox.Visible = false;
             loadPricesPictureBox.Visible = false;
+            smallLoadingPictureBox.Visible = false;
             productsDataGridView.MultiSelect = true;
-            this.MaximizeBox = false;
+            MaximizeBox = false;
         }
 
         private async void loadProductsButton_Click(object sender, System.EventArgs e)
@@ -31,12 +35,12 @@ namespace IsraeliSuperMarketWinFormsApp
             var products = await _manager.GetProductsAsync();
             foreach (var product1 in products)
             {
-                productsDataGridView.Rows.Add("הצג תמונה", product1.Id, product1.Manufacturer, product1.Name, 0);
+                productsDataGridView.Rows.Add("הצג תמונה", product1.Id, product1.Manufacturer, product1.Name,1, 0);
             }
             loadProductsPictureBox.Visible = false;
         }
 
-        private void compareButton_Click(object sender, System.EventArgs e)
+        private async void compareButton_Click(object sender, System.EventArgs e)
         {
             if (productsDataGridView.Rows.Count <= 0)
             {
@@ -47,6 +51,34 @@ namespace IsraeliSuperMarketWinFormsApp
             {
                 return;
             }
+            loadPricesPictureBox.Visible = true;
+            var result = await _manager.ComparePricesAsync(GetCheckedProducts());
+            resultRichTextBox.Text = "";
+            var i = 0;
+            foreach (var chain in result.Item1)
+            {
+                resultRichTextBox.Text += $"{chain}, Total Price = {result.Item2[i]}" + "\n";
+                ++i;
+            }
+            loadPricesPictureBox.Visible = false;
+        }
+
+        private Tuple<Product[], int[]> GetCheckedProducts()
+        {
+            Tuple<Product[], string[]> tuple;
+            var products = new List<Product>();
+            var quantities = new List<int>();
+            foreach (DataGridViewRow row in productsDataGridView.Rows)
+            {
+                var cell = row.Cells["check"] as DataGridViewCheckBoxCell;
+                var isChecked = cell != null && (cell.Value as bool? ?? false);
+                if (isChecked)
+                {
+                    products.Add(new Product { Id = int.Parse(row.Cells["Id"].Value.ToString()) });
+                    quantities.Add(int.Parse(row.Cells["quantity"].Value.ToString())); 
+                }
+            }
+            return Tuple.Create(products.ToArray(), quantities.ToArray());
         }
 
         private bool IsAnyProductChecked()
@@ -68,12 +100,14 @@ namespace IsraeliSuperMarketWinFormsApp
 
         private async void showChainsButton_Click(object sender, System.EventArgs e)
         {
+            smallLoadingPictureBox.Visible = true;
             var chains = await _manager.GetChainsAsync();
             var chainsStringBuilder = new StringBuilder();
             foreach (var chain in chains)
             {
                 chainsStringBuilder.AppendLine(chain.ToString());
             }
+            smallLoadingPictureBox.Visible = false;
             MessageBox.Show(chainsStringBuilder.ToString());
         }
 
@@ -114,30 +148,23 @@ namespace IsraeliSuperMarketWinFormsApp
             {
                 return;
             }
+            smallLoadingPictureBox.Visible = true;
             var imageName = productsDataGridView.Rows[e.RowIndex].Cells["Id"].Value.ToString();
             using (var form = new Form())
             {
-                try
+                var image = await _manager.GetImageAsync(int.Parse(imageName));
+                form.StartPosition = FormStartPosition.CenterScreen;
+                form.Size = new Size(image.Width + 18, image.Height + 40);
+                form.MaximizeBox = false;
+                form.Icon = Resources.icon;
+                var pb = new PictureBox
                 {
-                    var image = await _manager.GetImageAsync(int.Parse(imageName));
-                    form.StartPosition = FormStartPosition.CenterScreen;
-                    form.Size = new Size(image.Width + 18, image.Height + 40);
-                    form.MaximizeBox = false;
-                    form.Icon = Resources.icon;
-                    var pb = new PictureBox
-                    {
-                        Dock = DockStyle.Fill,
-                        Image = image
-                    };
-                    form.Controls.Add(pb);
-                    form.ShowDialog();
-
-                }
-                catch (System.IO.FileNotFoundException)
-                {
-                    MessageBox.Show("There was an error opening the bitmap." +
-                                    "Please check the path.");
-                }
+                    Dock = DockStyle.Fill,
+                    Image = image
+                };
+                form.Controls.Add(pb);
+                smallLoadingPictureBox.Visible = false;
+                form.ShowDialog();
             }
         }
     }
