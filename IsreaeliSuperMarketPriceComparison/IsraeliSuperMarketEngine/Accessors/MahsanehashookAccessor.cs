@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace IsraeliSuperMarketEngine.Accessors
 {
@@ -8,10 +9,10 @@ namespace IsraeliSuperMarketEngine.Accessors
         internal string GetPriceById(string id)
         {
             var items = XElement.Load(@"D:/MahsaneHashook.xml");
-            var item =
-            from itemCodeElement in items.Elements().Elements("ItemCode")
-            where (string)itemCodeElement.Value == id
-            select itemCodeElement.Parent?.Element("ItemPrice");
+            var item = items
+                .XPathSelectElements("./Products/Product/ItemCode")
+                .Where(x => x.Value == id)
+                .Select(x => x.Parent);
             return item.ElementAt(0).Element("ItemPrice")?.Value;
         }
     }

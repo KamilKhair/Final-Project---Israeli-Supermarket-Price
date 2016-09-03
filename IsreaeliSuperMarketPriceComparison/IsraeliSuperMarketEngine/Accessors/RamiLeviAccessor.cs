@@ -9,12 +9,10 @@ namespace IsraeliSuperMarketEngine.Accessors
         internal string GetPriceById(string id)
         {
             var items = XElement.Load(@"D:/RamiLevi.xml");
-            var item = items.Descendants();
-            foreach (var client in items
-             .XPathSelectElements("./Items/Item/ItemCode")
-             .Where(x => x.Value == id)
-             .Select(x => x.Parent))
-            { }
+            var item = items
+                .XPathSelectElements("./Items/Item/ItemCode")
+                .Where(x => x.Value == id)
+                .Select(x => x.Parent);
             return item.ElementAt(0).Element("ItemPrice")?.Value;
         }
     }
