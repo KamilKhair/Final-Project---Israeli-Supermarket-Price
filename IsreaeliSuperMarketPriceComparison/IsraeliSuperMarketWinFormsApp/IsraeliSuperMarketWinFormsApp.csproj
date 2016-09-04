@@ -84,13 +84,7 @@
     <None Include="Resources\compare.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\compare button.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\loading.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\loadproducts.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IsraeliSuperMarketManager\IsraeliSuperMarketManager.csproj">
@@ -107,6 +101,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\lightbox-ico-loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\compareButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\loadAllProducts.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ShowAllChains.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

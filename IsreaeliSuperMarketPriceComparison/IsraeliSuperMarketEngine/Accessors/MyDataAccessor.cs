@@ -6,13 +6,12 @@ using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using IsraeliSuperMarketEngine.Accessors;
 using IsraeliSuperMarketEngine.Extensions;
 using IsraeliSuperMarketModels;
 
-namespace IsraeliSuperMarketEngine.Data
+namespace IsraeliSuperMarketEngine.Accessors
 {
-    public class DataAccess
+    public class MyDataAccessor
     {
         private RamiLeviAccessor _ramiLeviAccessor;
         private RamiLeviAccessor RamiLeviAccessor => _ramiLeviAccessor ?? (_ramiLeviAccessor = new RamiLeviAccessor());
@@ -38,11 +37,24 @@ namespace IsraeliSuperMarketEngine.Data
                     {
                         Id = int.Parse(node.Attributes["Id"].InnerText),
                         Name = node.Attributes["Name"].InnerText,
-                        Manufacturer = node.Attributes["Manufacturer"].InnerText
+                        Manufacturer = node.Attributes["Manufacturer"].InnerText,
+                        IsWeighted = node.Attributes["IsWeighted"].InnerText == "true"
                     };
                 }
             }
             return products;
+        }
+
+        public Product GetProduct(string productId)
+        {
+            var products = XElement.Load(@"D:/Products.xml");
+            var product = products.Elements("Product").Single(element => element.Attribute("Id").Value == productId);
+            return new Product
+            {
+                Id = int.Parse(productId),
+                Name = product.Attribute("Name").Value,
+                Manufacturer = product.Attribute("Manufacturer").Value,
+            };
         }
 
         public Chain[] GetChains()
@@ -63,6 +75,8 @@ namespace IsraeliSuperMarketEngine.Data
                     {
                         Id = int.Parse(node.Attributes["Id"].InnerText),
                         Name = node.Attributes["Name"].InnerText,
+                        Max3Products = null,
+                        Min3Products = null
                     };
                 }
             }
@@ -84,14 +98,14 @@ namespace IsraeliSuperMarketEngine.Data
             return image.ToBase64String(ImageFormat.Bmp);
         }
 
-        public Tuple<Chain[], string[]> ComparePrices(Tuple<Product[], int[]> products)
+        public Tuple<Chain[], string[]> ComparePrices(Product[] products)
         {
             var catalog = XElement.Load(@"D:/Products.xml");
-            var ramiLeviPrices = new List<string>();
-            var mahsaneHashookPrices = new List<string>();
-            var shopersalPrices = new List<string>();
+            var ramiLeviPrices = new List<Product>();
+            var mahsaneHashookPrices = new List<Product>();
+            var shopersalPrices = new List<Product>();
             var i = 0;
-            foreach (var product in products.Item1.AsParallel())
+            foreach (var product in products.AsParallel())
             {
                 var productElement =
                     catalog.Elements("Product").Single(el => el.Attribute("Id").Value == product.Id.ToString());
@@ -99,13 +113,16 @@ namespace IsraeliSuperMarketEngine.Data
                 if (isComparable)
                 {
                     var comparableSearchId = productElement.Attribute("SearchId").Value;
-                    
+
                     //RamiLevi
-                    ramiLeviPrices.Add((double.Parse(RamiLeviAccessor.GetPriceById(comparableSearchId))*products.Item2[i]).ToString(CultureInfo.InvariantCulture));
+                    var ramiLeviPrice = double.Parse(RamiLeviAccessor.GetPriceById(comparableSearchId))* product.Quantity;
+                    ramiLeviPrices.Add(new Product { Id = product.Id, Name = product.Name, Manufacturer = product.Manufacturer, Price = ramiLeviPrice, Quantity = product.Quantity });
                     //MahsaneHashook
-                    mahsaneHashookPrices.Add((double.Parse(MahsanehashookAccessor.GetPriceById(comparableSearchId))* products.Item2[i]).ToString(CultureInfo.InvariantCulture));
+                    var mahsaneHashookPrice = double.Parse(MahsanehashookAccessor.GetPriceById(comparableSearchId)) * product.Quantity;
+                    mahsaneHashookPrices.Add(new Product { Id = product.Id, Name = product.Name, Manufacturer = product.Manufacturer, Price = mahsaneHashookPrice, Quantity = product.Quantity });
                     //ShoperSal
-                    shopersalPrices.Add((double.Parse(ShopersalAccessor.GetPriceById(comparableSearchId))* products.Item2[i]).ToString(CultureInfo.InvariantCulture));
+                    var shopersalPrice = double.Parse(ShopersalAccessor.GetPriceById(comparableSearchId)) * product.Quantity;
+                    shopersalPrices.Add(new Product { Id = product.Id, Name = product.Name, Manufacturer = product.Manufacturer, Price = shopersalPrice, Quantity = product.Quantity });
                 }
                 else
                 {
@@ -115,11 +132,14 @@ namespace IsraeliSuperMarketEngine.Data
                     var shopersalId = chains.Single(el => el.Attribute("Name").Value == "Shopersal").Attribute("SearchId").Value;
 
                     //RamiLevi
-                    ramiLeviPrices.Add((double.Parse(RamiLeviAccessor.GetPriceById(ramiLeviId))* products.Item2[i]).ToString(CultureInfo.InvariantCulture));
+                    var ramiLeviPrice = double.Parse(RamiLeviAccessor.GetPriceById(ramiLeviId)) * product.Quantity;
+                    ramiLeviPrices.Add(new Product { Id = product.Id, Name = product.Name, Manufacturer = product.Manufacturer, Price = ramiLeviPrice, Quantity = product.Quantity });
                     //MahsaneHashook
-                    mahsaneHashookPrices.Add((double.Parse(MahsanehashookAccessor.GetPriceById(mahsanehashookId))* products.Item2[i]).ToString(CultureInfo.InvariantCulture));
+                    var mahsaneHashookPrice = double.Parse(MahsanehashookAccessor.GetPriceById(mahsanehashookId)) * product.Quantity;
+                    mahsaneHashookPrices.Add(new Product { Id = product.Id, Name = product.Name, Manufacturer = product.Manufacturer, Price = mahsaneHashookPrice, Quantity = product.Quantity });
                     //ShoperSal
-                    shopersalPrices.Add((double.Parse(ShopersalAccessor.GetPriceById(shopersalId))* products.Item2[i]).ToString(CultureInfo.InvariantCulture));
+                    var shopersalPrice = double.Parse(ShopersalAccessor.GetPriceById(shopersalId)) * product.Quantity;
+                    shopersalPrices.Add(new Product { Id = product.Id, Name = product.Name, Manufacturer = product.Manufacturer, Price = shopersalPrice, Quantity = product.Quantity });
                 }
                 ++i;
             }
@@ -128,32 +148,32 @@ namespace IsraeliSuperMarketEngine.Data
             {
                 new Chain
                 {
-                    Name = "RamiLevi",
+                    Name = "רמי לוי",
                     Id = 1,
-                    Max3Products = ramiLeviPrices.OrderByDescending(x => x).Take(3),
-                    Min3Products = ramiLeviPrices.OrderBy(x => x).Take(3)
+                    Max3Products = ramiLeviPrices.OrderByDescending(p => p.Price).Take(3),
+                    Min3Products = ramiLeviPrices.OrderBy(p => p.Price).Take(3)
                 },
                 new Chain
                 {
-                    Name = "MahsaneHashook",
-                    Id = 1,
-                    Max3Products = mahsaneHashookPrices.OrderByDescending(x => x).Take(3),
-                    Min3Products = mahsaneHashookPrices.OrderBy(x => x).Take(3)
+                    Name = "מחסני השוק",
+                    Id = 2,
+                    Max3Products = mahsaneHashookPrices.OrderByDescending(p => p.Price).Take(3),
+                    Min3Products = mahsaneHashookPrices.OrderBy(p => p.Price).Take(3)
                 },
 
                 new Chain
                 {
-                    Name = "Shopersal",
-                    Id = 1,
-                    Max3Products = shopersalPrices.OrderByDescending(x => x).Take(3),
-                    Min3Products = shopersalPrices.OrderBy(x => x).Take(3)
+                    Name = "שופרסל",
+                    Id = 3,
+                    Max3Products = shopersalPrices.OrderByDescending(p => p.Price).Take(3),
+                    Min3Products = shopersalPrices.OrderBy(p => p.Price).Take(3)
                 }
             };
             var resultPrices = new[]
             {
-                ramiLeviPrices.Sum(x => double.Parse(x)).ToString(CultureInfo.InvariantCulture),
-                mahsaneHashookPrices.Sum(x => double.Parse(x)).ToString(CultureInfo.InvariantCulture),
-                shopersalPrices.Sum(x => double.Parse(x)).ToString(CultureInfo.InvariantCulture)
+                ramiLeviPrices.Sum(p => p.Price).ToString(CultureInfo.InvariantCulture),
+                mahsaneHashookPrices.Sum(p => p.Price).ToString(CultureInfo.InvariantCulture),
+                shopersalPrices.Sum(p => p.Price).ToString(CultureInfo.InvariantCulture)
             };
             return Tuple.Create(resultChains, resultPrices);
         }

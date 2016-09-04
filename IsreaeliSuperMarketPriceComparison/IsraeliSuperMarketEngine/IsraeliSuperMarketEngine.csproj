@@ -81,8 +81,8 @@
     <Compile Include="Accessors\ShopersalAccessor.cs" />
     <Compile Include="Accessors\RamiLeviAccessor.cs" />
     <Compile Include="Accessors\MahsanehashookAccessor.cs" />
-    <Compile Include="Data\DataAccess.cs" />
-    <Compile Include="Extensions\BitmapExtinsion.cs" />
+    <Compile Include="Accessors\MyDataAccessor.cs" />
+    <Compile Include="Extensions\EngineExtensions..cs" />
     <Compile Include="IsraeliSuperMarketService.svc.cs">
       <DependentUpon>IsraeliSuperMarketService.svc</DependentUpon>
     </Compile>

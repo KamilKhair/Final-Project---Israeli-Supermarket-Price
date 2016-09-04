@@ -1,30 +1,30 @@
 ﻿<Products>
-  <Product Id ="1" Name = "חומוס 1 ק'ג" Manufacturer = "צבר" IsComparable = "true" SearchId = "7290003727667"/>
-  <Product Id ="2" Name = "גבינת קוטג' 1% 250 גרם" Manufacturer = "תנובה" IsComparable = "true" SearchId = "7290014758681"/>
-  <Product Id ="3" Name = "מארז מילקי שוקולד שמינייה" Manufacturer = "שטראוס" IsComparable = "true" SearchId = "7290104726712"/>
-  <Product Id ="4" Name = "שוקולד חלב פרה" Manufacturer = "עלית" IsComparable = "true" SearchId = "7290000170053"/>
-  <Product Id ="5" Name = "אקטיביה לבן 0% 150 גרם" Manufacturer = "שטראוס" IsComparable = "true" SearchId = "7290011194802"/>
-  <Product Id ="6" Name = "נוזל כלים לימון 650 מ'ל" Manufacturer = "פיירי" IsComparable = "true" SearchId = "4084500088917"/>
-  <Product Id ="7" Name = "שמפו 10 לשיער רגיל 700 מ'ל" Manufacturer = "קרליין" IsComparable = "true" SearchId = "7290006788009"/>
-  <Product Id ="8" Name = "עגבניה - שקילה ב ק'ג" Manufacturer = "-" IsComparable = "false">
+  <Product Id ="1" Name = "חומוס 1 ק'ג" Manufacturer = "צבר" IsWeighted = "false" IsComparable = "true" SearchId = "7290003727667"/>
+  <Product Id ="2" Name = "גבינת קוטג' 1% 250 גרם" Manufacturer = "תנובה" IsComparable = "true" IsWeighted = "false" SearchId = "7290014758681"/>
+  <Product Id ="3" Name = "מארז מילקי שוקולד שמינייה" Manufacturer = "שטראוס" IsComparable = "true" IsWeighted = "false" SearchId = "7290104726712"/>
+  <Product Id ="4" Name = "שוקולד חלב פרה" Manufacturer = "עלית" IsComparable = "true" IsWeighted = "false" SearchId = "7290000170053"/>
+  <Product Id ="5" Name = "אקטיביה לבן 0% 150 גרם" Manufacturer = "שטראוס" IsComparable = "true" IsWeighted = "false" SearchId = "7290011194802"/>
+  <Product Id ="6" Name = "נוזל כלים לימון 650 מ'ל" Manufacturer = "פיירי" IsComparable = "true" IsWeighted = "false" SearchId = "4084500088917"/>
+  <Product Id ="7" Name = "שמפו 10 לשיער רגיל 700 מ'ל" Manufacturer = "קרליין" IsComparable = "true" IsWeighted = "false" SearchId = "7290006788009"/>
+  <Product Id ="8" Name = "עגבניה - שקילה ב ק'ג" Manufacturer = "-" IsComparable = "false" IsWeighted = "true">
     <Chain Name="RamiLevi" SearchId="1100"/>
     <Chain Name="MahsaneHashook" SearchId="660"/>
     <Chain Name="Shopersal" SearchId="7290000960272"/>
   </Product>
-  <Product Id ="9" Name = "מלפפון - שקילה ב ק'ג" Manufacturer = "-" IsComparable = "false">
+  <Product Id ="9" Name = "מלפפון - שקילה ב ק'ג" Manufacturer = "-" IsComparable = "false" IsWeighted = "true">
     <Chain Name="RamiLevi" SearchId="101"/>
     <Chain Name="MahsaneHashook" SearchId="645"/>
     <Chain Name="Shopersal" SearchId="7290009077667"/>
   </Product>
-  <Product Id ="10" Name = "חזה עוף - שקילה ב ק'ג" Manufacturer = "-" IsComparable = "false">
+  <Product Id ="10" Name = "חזה עוף - שקילה ב ק'ג" Manufacturer = "-" IsComparable = "false" IsWeighted = "true">
     <Chain Name="RamiLevi" SearchId="7290000000666"/>
     <Chain Name="MahsaneHashook" SearchId="7290000611860"/>
     <Chain Name="Shopersal" SearchId="7290009805291"/>
   </Product>
-  <Product Id ="11" Name = "פילה סלמון - שקילה  ב ק'ג" Manufacturer = "-" IsComparable = "false">
+  <Product Id ="11" Name = "פילה סלמון - שקילה  ב ק'ג" Manufacturer = "-" IsComparable = "false" IsWeighted = "true">
     <Chain Name="RamiLevi" SearchId="1615324"/>
     <Chain Name="MahsaneHashook" SearchId="403"/>
     <Chain Name="Shopersal" SearchId="7290000935850"/>
   </Product>
-  <Product Id ="12" Name = "חלב מפוסטר 3% בקרטון 1 ליטר" Manufacturer = "תנובה" IsComparable = "true" SearchId = "7290000042442"/>
+  <Product Id ="12" Name = "חלב מפוסטר 3% בקרטון 1 ליטר" Manufacturer = "תנובה" IsComparable = "true" IsWeighted = "false" SearchId = "7290000042442"/>
 </Products>

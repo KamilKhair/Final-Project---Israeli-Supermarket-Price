@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using System.Runtime.Remoting.Services;
 
 namespace IsraeliSuperMarketEngine.Extensions
 {
-    public static class ExtBitmap
+    public static class EngineExtensions
     {
         public static string ToBase64String(this Bitmap bmp, ImageFormat imageFormat)
         {

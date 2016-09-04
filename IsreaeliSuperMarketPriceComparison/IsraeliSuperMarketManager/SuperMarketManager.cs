@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -32,6 +31,23 @@ namespace IsraeliSuperMarketManager
             }).ContinueWith(x => responseObject);
         }
 
+        public Task<IProduct> GetProductAsync(int productId)
+        {
+            IProduct responseObject = null;
+            return Task.Factory.StartNew(() =>
+            {
+                var url = "http://localhost:20997/IsraeliSuperMarketService.svc/Product/" + productId;
+                var client = new WebClient();
+                client.Headers.Add("Accept", "application/json");
+                var result = client.DownloadString(url);
+                var serializer = new DataContractJsonSerializer(typeof(Product));
+                using (var stream = new MemoryStream(Encoding.ASCII.GetBytes(result)))
+                {
+                    responseObject = serializer.ReadObject(stream) as Product;
+                }
+            }).ContinueWith(x => responseObject);
+        }
+
         public Task<IChain[]> GetChainsAsync()
         {
             IChain[] responseObject = { };
@@ -51,7 +67,7 @@ namespace IsraeliSuperMarketManager
             }).ContinueWith(x => responseObject);
         }
 
-        public Task<Tuple<Chain[], string[]>> ComparePricesAsync(Tuple<Product[], int[]> products)
+        public Task<Tuple<Chain[], string[]>> ComparePricesAsync(Product[] products)
         {
             Tuple<Chain[], string[]> responseObject = null;
             return Task.Factory.StartNew(() =>
@@ -60,7 +76,7 @@ namespace IsraeliSuperMarketManager
                 request.Accept = "application/json";
                 request.ContentType = "application/json";
                 request.Method = "POST";
-                var serializer = new DataContractJsonSerializer(typeof(Tuple<Product[], int[]>));
+                var serializer = new DataContractJsonSerializer(typeof(Product[]));
                 var requestStream = request.GetRequestStream();
                 serializer.WriteObject(requestStream, products);
                 requestStream.Close();

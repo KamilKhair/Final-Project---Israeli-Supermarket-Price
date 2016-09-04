@@ -12,10 +12,11 @@ namespace IsraeliSuperMarketModels
         public int Id { get; set; }
         [DataMember]
         public string Name { get; set; }
+
         [DataMember]
-        public IEnumerable<string> Max3Products { get; set; }
+        public IEnumerable<Product> Max3Products { get; set; }
         [DataMember]
-        public IEnumerable<string> Min3Products { get; set; }
+        public IEnumerable<Product> Min3Products { get; set; }
 
         public bool Equals(Chain other)
         {

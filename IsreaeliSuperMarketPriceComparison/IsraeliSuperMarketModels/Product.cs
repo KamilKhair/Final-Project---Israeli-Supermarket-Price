@@ -13,6 +13,12 @@ namespace IsraeliSuperMarketModels
         public string Name { get; set; }
         [DataMember]
         public string Manufacturer { get; set; }
+        [DataMember]
+        public double Price { get; set; }
+        [DataMember]
+        public double Quantity { get; set; }
+        [DataMember]
+        public bool IsWeighted { get; set; }
         public bool Equals(Product other)
         {
             return Id == other.Id;
