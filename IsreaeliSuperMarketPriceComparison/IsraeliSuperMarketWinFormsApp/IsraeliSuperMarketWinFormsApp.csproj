@@ -92,7 +92,7 @@
       <Name>IsraeliSuperMarketManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\IsraeliSuperMarketModels\IsraeliSuperMarketModels.csproj">
-      <Project>{20d1fc31-0e2a-4024-9480-747b1849bc5a}</Project>
+      <Project>{e63489c2-22f0-43e1-9994-6ef82c3cb1ef}</Project>
       <Name>IsraeliSuperMarketModels</Name>
     </ProjectReference>
   </ItemGroup>

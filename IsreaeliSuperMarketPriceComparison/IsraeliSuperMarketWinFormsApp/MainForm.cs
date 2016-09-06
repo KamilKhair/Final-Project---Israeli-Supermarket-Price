@@ -99,14 +99,14 @@ namespace IsraeliSuperMarketWinFormsApp
                 {
                     double doubleQuantity;
                     if (double.TryParse(row.Cells["quantity"].Value.ToString(), out doubleQuantity)) continue;
-                    MessageBox.Show($"Wrong Quantity of product id = {row.Cells["Id"].Value}");
+                    MessageBox.Show($@"Wrong Quantity of product id = {row.Cells["Id"].Value}");
                     return false;
                 }
                 else
                 {
                     int intQuantity;
                     if (int.TryParse(row.Cells["quantity"].Value.ToString(), out intQuantity)) continue;
-                    MessageBox.Show($"Wrong Quantity of product id = {row.Cells["Id"].Value}");
+                    MessageBox.Show($@"Wrong Quantity of product id = {row.Cells["Id"].Value}");
                     return false;
                 }
             }
@@ -155,7 +155,7 @@ namespace IsraeliSuperMarketWinFormsApp
             {
                 var image = await _manager.GetImageAsync(int.Parse(imageName));
                 form.StartPosition = FormStartPosition.CenterScreen;
-                form.Size = new Size(image.Width + 18, image.Height + 40);
+                form.Size = new Size(image.Width, image.Height +40);
                 form.MaximumSize = form.Size;
                 form.MinimumSize = form.Size;
                 form.MaximizeBox = false;
@@ -199,14 +199,14 @@ namespace IsraeliSuperMarketWinFormsApp
                 {
                     foreach (var p in _compareResult.Item1.Single(chain => chain.Id == id).Max3Products)
                     {
-                        tb.Text += $"Id = {p.Id}, Name = {p.Name}, Price = {p.Price}\n";
+                        tb.Text += $"Id = {p.Id},          Name = {p.Name},          Price = {p.Price}\n";
                     }
                 }
                 else
                 {
                     foreach (var p in _compareResult.Item1.Single(chain => chain.Id == id).Min3Products)
                     {
-                        tb.Text += $"Id = {p.Id}, Name = {p.Name}, Price = {p.Price}\n";
+                        tb.Text += $"Id = {p.Id},          Name = {p.Name},          Price = {p.Price}\n";
                     }
                 }
                 form.Controls.Add(tb);
