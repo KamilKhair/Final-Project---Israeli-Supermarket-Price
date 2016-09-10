@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using IsraeliSuperMarketManager;
 using IsraeliSuperMarketModels;
@@ -14,8 +7,8 @@ namespace IsraeliSuperMarketWinFormsApp
 {
     public partial class LogInForm : Form
     {
-        private User _user;
         private readonly SuperMarketManager _manager;
+
         public LogInForm()
         {
             InitializeComponent();
@@ -39,16 +32,23 @@ namespace IsraeliSuperMarketWinFormsApp
                 UserName = userNameTextBox.Text,
                 Password = passwordTextBox.Text
             };
-            var logInReasult = await _manager.LogInAsync(user);
-            if (logInReasult.Item2)
+            try
             {
-                var mainForm = new MainForm(this, logInReasult.Item1);
-                Hide();
-                mainForm.ShowDialog();
+                var logInReasult = await _manager.LogInAsync(user);
+                if (logInReasult.Item2)
+                {
+                    var mainForm = new MainForm(this, logInReasult.Item1);
+                    Hide();
+                    mainForm.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show(logInReasult.Item3);
+                }
             }
-            else
+            catch (Exception)
             {
-                MessageBox.Show(logInReasult.Item3);
+                MessageBox.Show(@"  שגיאה בהתחברות לשרת");
             }
         }
     }

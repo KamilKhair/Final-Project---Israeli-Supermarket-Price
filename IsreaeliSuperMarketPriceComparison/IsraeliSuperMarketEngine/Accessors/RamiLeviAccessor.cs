@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
-using System.Xml.XPath;
 
 namespace IsraeliSuperMarketEngine.Accessors
 {
@@ -8,12 +7,13 @@ namespace IsraeliSuperMarketEngine.Accessors
     {
         internal string GetPriceById(string id)
         {
-            var items = XElement.Load(@"D:/ISMC/Data/RamiLevi.xml");
-            var item = items
-                .XPathSelectElements("./Items/Item/ItemCode")
-                .Where(x => x.Value == id)
-                .Select(x => x.Parent);
-            return item.ElementAt(0).Element("ItemPrice")?.Value;
+            var items = XElement.Load(@"D:/ISMC/Data/RamiLevi.xml").Descendants("Item");
+            var item = items.Single(p =>
+            {
+                var xElement = p.Element("ItemCode");
+                return xElement != null && xElement.Value.Equals(id);
+            });
+            return item.Element("ItemPrice")?.Value;
         }
     }
 }

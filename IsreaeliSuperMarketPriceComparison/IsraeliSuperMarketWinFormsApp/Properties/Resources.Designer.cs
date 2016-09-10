@@ -113,9 +113,19 @@ namespace IsraeliSuperMarketWinFormsApp.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap loading {
+        internal static System.Drawing.Bitmap loadCart {
             get {
-                object obj = ResourceManager.GetObject("loading", resourceCulture);
+                object obj = ResourceManager.GetObject("loadCart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap loadingHeb {
+            get {
+                object obj = ResourceManager.GetObject("loadingHeb", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,6 +143,16 @@ namespace IsraeliSuperMarketWinFormsApp.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SaveCart {
+            get {
+                object obj = ResourceManager.GetObject("SaveCart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SaveExcell {
             get {
                 object obj = ResourceManager.GetObject("SaveExcell", resourceCulture);
@@ -143,9 +163,9 @@ namespace IsraeliSuperMarketWinFormsApp.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap show {
+        internal static System.Drawing.Bitmap SelectAlll {
             get {
-                object obj = ResourceManager.GetObject("show", resourceCulture);
+                object obj = ResourceManager.GetObject("SelectAlll", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,9 +173,19 @@ namespace IsraeliSuperMarketWinFormsApp.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap showimgg {
+        internal static System.Drawing.Bitmap showimg {
             get {
-                object obj = ResourceManager.GetObject("showimgg", resourceCulture);
+                object obj = ResourceManager.GetObject("showimg", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap showw {
+            get {
+                object obj = ResourceManager.GetObject("showw", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -166,6 +196,16 @@ namespace IsraeliSuperMarketWinFormsApp.Properties {
         internal static System.Drawing.Bitmap smallLoading {
             get {
                 object obj = ResourceManager.GetObject("smallLoading", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap unSelectAlll {
+            get {
+                object obj = ResourceManager.GetObject("unSelectAlll", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

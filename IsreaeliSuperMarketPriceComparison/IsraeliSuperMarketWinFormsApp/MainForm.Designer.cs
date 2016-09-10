@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.productsDataGridView = new System.Windows.Forms.DataGridView();
-            this.showImage = new System.Windows.Forms.DataGridViewImageColumn();
             this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.manufacturer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.showImage = new System.Windows.Forms.DataGridViewImageColumn();
             this.product = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -54,6 +54,10 @@
             this.saveAsExcelButton = new System.Windows.Forms.Button();
             this.clearPriceComparisonResultsButton = new System.Windows.Forms.Button();
             this.welcomeLabel = new System.Windows.Forms.Label();
+            this.saveCartButton = new System.Windows.Forms.Button();
+            this.loadCartButton = new System.Windows.Forms.Button();
+            this.selectAllButton = new System.Windows.Forms.Button();
+            this.unSelectAllButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.productsDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.loadProductsPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -69,9 +73,9 @@
             this.productsDataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             this.productsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.productsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.showImage,
             this.Id,
             this.manufacturer,
+            this.showImage,
             this.product,
             this.quantity,
             this.check});
@@ -79,20 +83,11 @@
             this.productsDataGridView.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
             this.productsDataGridView.Name = "productsDataGridView";
             this.productsDataGridView.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.productsDataGridView.Size = new System.Drawing.Size(1536, 1208);
+            this.productsDataGridView.Size = new System.Drawing.Size(1536, 1086);
             this.productsDataGridView.TabIndex = 1;
             this.productsDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.productsDataGridView_CellClick);
             this.productsDataGridView.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.productsDataGridView_CellMouseLeave);
             this.productsDataGridView.CellMouseMove += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.productsDataGridView_CellMouseMove);
-            // 
-            // showImage
-            // 
-            this.showImage.HeaderText = "תמונה";
-            this.showImage.Name = "showImage";
-            this.showImage.ReadOnly = true;
-            this.showImage.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.showImage.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.showImage.Width = 70;
             // 
             // Id
             // 
@@ -108,6 +103,15 @@
             this.manufacturer.Name = "manufacturer";
             this.manufacturer.ReadOnly = true;
             this.manufacturer.Width = 117;
+            // 
+            // showImage
+            // 
+            this.showImage.HeaderText = "תמונה";
+            this.showImage.Name = "showImage";
+            this.showImage.ReadOnly = true;
+            this.showImage.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.showImage.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.showImage.Width = 70;
             // 
             // product
             // 
@@ -143,11 +147,11 @@
             // 
             // loadProductsPictureBox
             // 
-            this.loadProductsPictureBox.Image = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.loading;
-            this.loadProductsPictureBox.Location = new System.Drawing.Point(1544, 498);
+            this.loadProductsPictureBox.Image = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.loadingHeb;
+            this.loadProductsPictureBox.Location = new System.Drawing.Point(1628, 582);
             this.loadProductsPictureBox.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
             this.loadProductsPictureBox.Name = "loadProductsPictureBox";
-            this.loadProductsPictureBox.Size = new System.Drawing.Size(388, 358);
+            this.loadProductsPictureBox.Size = new System.Drawing.Size(220, 209);
             this.loadProductsPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.loadProductsPictureBox.TabIndex = 20;
             this.loadProductsPictureBox.TabStop = false;
@@ -193,7 +197,7 @@
             // smallLoadingPictureBox
             // 
             this.smallLoadingPictureBox.Image = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.smallLoading;
-            this.smallLoadingPictureBox.Location = new System.Drawing.Point(969, 115);
+            this.smallLoadingPictureBox.Location = new System.Drawing.Point(981, 95);
             this.smallLoadingPictureBox.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
             this.smallLoadingPictureBox.Name = "smallLoadingPictureBox";
             this.smallLoadingPictureBox.Size = new System.Drawing.Size(16, 16);
@@ -273,10 +277,10 @@
             // 
             // chainName
             // 
+            this.chainName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.chainName.HeaderText = "ספק";
             this.chainName.Name = "chainName";
             this.chainName.ReadOnly = true;
-            this.chainName.Width = 90;
             // 
             // chainId
             // 
@@ -287,11 +291,11 @@
             // 
             // loadPricesPictureBox
             // 
-            this.loadPricesPictureBox.Image = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.loading;
-            this.loadPricesPictureBox.Location = new System.Drawing.Point(271, 624);
+            this.loadPricesPictureBox.Image = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.loadingHeb;
+            this.loadPricesPictureBox.Location = new System.Drawing.Point(379, 688);
             this.loadPricesPictureBox.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
             this.loadPricesPictureBox.Name = "loadPricesPictureBox";
-            this.loadPricesPictureBox.Size = new System.Drawing.Size(388, 358);
+            this.loadPricesPictureBox.Size = new System.Drawing.Size(220, 209);
             this.loadPricesPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.loadPricesPictureBox.TabIndex = 27;
             this.loadPricesPictureBox.TabStop = false;
@@ -313,7 +317,7 @@
             // 
             this.clearPriceComparisonResultsButton.BackgroundImage = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.Clear;
             this.clearPriceComparisonResultsButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.clearPriceComparisonResultsButton.Location = new System.Drawing.Point(25, 1191);
+            this.clearPriceComparisonResultsButton.Location = new System.Drawing.Point(186, 1191);
             this.clearPriceComparisonResultsButton.Name = "clearPriceComparisonResultsButton";
             this.clearPriceComparisonResultsButton.Size = new System.Drawing.Size(372, 103);
             this.clearPriceComparisonResultsButton.TabIndex = 29;
@@ -324,11 +328,63 @@
             // 
             this.welcomeLabel.AutoSize = true;
             this.welcomeLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.welcomeLabel.Location = new System.Drawing.Point(146, 48);
+            this.welcomeLabel.Location = new System.Drawing.Point(88, 48);
             this.welcomeLabel.Name = "welcomeLabel";
             this.welcomeLabel.Size = new System.Drawing.Size(117, 46);
             this.welcomeLabel.TabIndex = 30;
             this.welcomeLabel.Text = "שלום ";
+            // 
+            // saveCartButton
+            // 
+            this.saveCartButton.BackgroundImage = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.SaveCart;
+            this.saveCartButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.saveCartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.saveCartButton.Location = new System.Drawing.Point(1528, 1191);
+            this.saveCartButton.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
+            this.saveCartButton.Name = "saveCartButton";
+            this.saveCartButton.Size = new System.Drawing.Size(372, 103);
+            this.saveCartButton.TabIndex = 31;
+            this.saveCartButton.UseVisualStyleBackColor = true;
+            this.saveCartButton.Click += new System.EventHandler(this.saveCartButton_Click);
+            // 
+            // loadCartButton
+            // 
+            this.loadCartButton.BackgroundImage = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.loadCart;
+            this.loadCartButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.loadCartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.loadCartButton.Location = new System.Drawing.Point(1140, 1191);
+            this.loadCartButton.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
+            this.loadCartButton.Name = "loadCartButton";
+            this.loadCartButton.Size = new System.Drawing.Size(372, 103);
+            this.loadCartButton.TabIndex = 32;
+            this.loadCartButton.UseVisualStyleBackColor = true;
+            this.loadCartButton.Click += new System.EventHandler(this.loadCartButton_Click);
+            // 
+            // selectAllButton
+            // 
+            this.selectAllButton.BackgroundImage = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.SelectAlll;
+            this.selectAllButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.selectAllButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selectAllButton.Location = new System.Drawing.Point(2228, 1191);
+            this.selectAllButton.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
+            this.selectAllButton.Name = "selectAllButton";
+            this.selectAllButton.Size = new System.Drawing.Size(265, 103);
+            this.selectAllButton.TabIndex = 33;
+            this.selectAllButton.UseVisualStyleBackColor = true;
+            this.selectAllButton.Click += new System.EventHandler(this.selectAllButton_Click);
+            // 
+            // unSelectAllButton
+            // 
+            this.unSelectAllButton.BackgroundImage = global::IsraeliSuperMarketWinFormsApp.Properties.Resources.unSelectAlll;
+            this.unSelectAllButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.unSelectAllButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unSelectAllButton.Location = new System.Drawing.Point(1947, 1191);
+            this.unSelectAllButton.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
+            this.unSelectAllButton.Name = "unSelectAllButton";
+            this.unSelectAllButton.Size = new System.Drawing.Size(265, 103);
+            this.unSelectAllButton.TabIndex = 34;
+            this.unSelectAllButton.UseVisualStyleBackColor = true;
+            this.unSelectAllButton.Click += new System.EventHandler(this.unSelectAllButton_Click);
             // 
             // MainForm
             // 
@@ -337,6 +393,10 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(2524, 1310);
+            this.Controls.Add(this.unSelectAllButton);
+            this.Controls.Add(this.selectAllButton);
+            this.Controls.Add(this.loadCartButton);
+            this.Controls.Add(this.saveCartButton);
             this.Controls.Add(this.welcomeLabel);
             this.Controls.Add(this.clearPriceComparisonResultsButton);
             this.Controls.Add(this.saveAsExcelButton);
@@ -384,18 +444,22 @@
         private System.Windows.Forms.PictureBox loadPricesPictureBox;
         private System.Windows.Forms.Button saveAsExcelButton;
         private System.Windows.Forms.Button clearPriceComparisonResultsButton;
-        private System.Windows.Forms.DataGridViewImageColumn showImage;
+        private System.Windows.Forms.Label welcomeLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn Id;
         private System.Windows.Forms.DataGridViewTextBoxColumn manufacturer;
+        private System.Windows.Forms.DataGridViewImageColumn showImage;
         private System.Windows.Forms.DataGridViewTextBoxColumn product;
         private System.Windows.Forms.DataGridViewTextBoxColumn quantity;
         private System.Windows.Forms.DataGridViewCheckBoxColumn check;
+        private System.Windows.Forms.Button saveCartButton;
+        private System.Windows.Forms.Button loadCartButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalPrice;
         private System.Windows.Forms.DataGridViewImageColumn max3Prices;
         private System.Windows.Forms.DataGridViewImageColumn min3Prices;
         private System.Windows.Forms.DataGridViewTextBoxColumn chainName;
         private System.Windows.Forms.DataGridViewTextBoxColumn chainId;
-        private System.Windows.Forms.Label welcomeLabel;
+        private System.Windows.Forms.Button selectAllButton;
+        private System.Windows.Forms.Button unSelectAllButton;
     }
 }
 

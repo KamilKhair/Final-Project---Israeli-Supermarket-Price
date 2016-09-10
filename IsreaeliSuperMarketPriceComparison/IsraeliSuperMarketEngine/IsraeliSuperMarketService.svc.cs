@@ -27,12 +27,6 @@ namespace IsraeliSuperMarketEngine
             return DataAccess.GetProduct(productId);
         }
 
-        [WebGet(UriTemplate = "/Chains")]
-        public IEnumerable<IChain> GetChains()
-        {
-            return DataAccess.GetChains();
-        }
-
         [WebGet(UriTemplate = "/Image/{imageId}")]
         public string GetImage(string imageId)
         {

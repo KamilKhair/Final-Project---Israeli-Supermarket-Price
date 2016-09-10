@@ -49,25 +49,6 @@ namespace IsraeliSuperMarketManager
             }).ContinueWith(x => responseObject);
         }
 
-        public Task<IEnumerable<IChain>> GetChainsAsync()
-        {
-            IEnumerable<IChain> responseObject = null;
-            return Task.Factory.StartNew(() =>
-            {
-                var request = (HttpWebRequest)WebRequest.Create("http://localhost:20997/IsraeliSuperMarketService.svc/Chains");
-                request.Accept = "application/json";
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                var serializer = new DataContractJsonSerializer(typeof(IEnumerable<IChain>));
-                var response = request.GetResponse();
-                var responseStream = response.GetResponseStream();
-                if (responseStream != null)
-                {
-                    responseObject = serializer.ReadObject(responseStream) as IEnumerable<IChain>;
-                }
-            }).ContinueWith(x => responseObject);
-        }
-
         public Task<Tuple<IEnumerable<Chain>, IEnumerable<string>>> ComparePricesAsync(IEnumerable<Product> products)
         {
             Tuple<IEnumerable<Chain>, IEnumerable<string>> responseObject = null;

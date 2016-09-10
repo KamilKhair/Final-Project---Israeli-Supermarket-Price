@@ -10,7 +10,6 @@ namespace IsraeliSuperMarketManager
     {
         Task<IEnumerable<IProduct>> GetProductsAsync();
         Task<IProduct> GetProductAsync(int productId);
-        Task<IEnumerable<IChain>> GetChainsAsync();
         Task<Tuple<IEnumerable<Chain>, IEnumerable<string>>> ComparePricesAsync(IEnumerable<Product> products);
         Task<Bitmap> GetImageAsync(int imageId);
         Task<Tuple<User, bool, string>> LogInAsync(IUser user);
