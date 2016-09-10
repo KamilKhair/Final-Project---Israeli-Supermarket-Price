@@ -43,7 +43,8 @@ namespace IsraeliSuperMarketEngine.Accessors
                     Id = int.Parse(node.Attributes["Id"].InnerText),
                     Name = node.Attributes["Name"].InnerText,
                     Manufacturer = node.Attributes["Manufacturer"].InnerText,
-                    IsWeighted = node.Attributes["IsWeighted"].InnerText == "true"
+                    IsWeighted = node.Attributes["IsWeighted"].InnerText == "true",
+                    Category = node.Attributes["Category"].InnerText
                 }).ToList();
             return products;
         }

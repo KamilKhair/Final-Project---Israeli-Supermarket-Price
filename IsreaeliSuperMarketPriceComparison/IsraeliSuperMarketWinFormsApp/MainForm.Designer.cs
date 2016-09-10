@@ -30,12 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.productsDataGridView = new System.Windows.Forms.DataGridView();
-            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.manufacturer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.showImage = new System.Windows.Forms.DataGridViewImageColumn();
-            this.product = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.loadProductsPictureBox = new System.Windows.Forms.PictureBox();
             this.loadProductsButton = new System.Windows.Forms.Button();
@@ -58,6 +52,13 @@
             this.loadCartButton = new System.Windows.Forms.Button();
             this.selectAllButton = new System.Windows.Forms.Button();
             this.unSelectAllButton = new System.Windows.Forms.Button();
+            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.manufacturer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.showImage = new System.Windows.Forms.DataGridViewImageColumn();
+            this.category = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.product = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.productsDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.loadProductsPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -76,6 +77,7 @@
             this.Id,
             this.manufacturer,
             this.showImage,
+            this.category,
             this.product,
             this.quantity,
             this.check});
@@ -88,51 +90,6 @@
             this.productsDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.productsDataGridView_CellClick);
             this.productsDataGridView.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.productsDataGridView_CellMouseLeave);
             this.productsDataGridView.CellMouseMove += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.productsDataGridView_CellMouseMove);
-            // 
-            // Id
-            // 
-            this.Id.HeaderText = "מס\"ד";
-            this.Id.Name = "Id";
-            this.Id.ReadOnly = true;
-            this.Id.Width = 40;
-            // 
-            // manufacturer
-            // 
-            this.manufacturer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.manufacturer.HeaderText = "יצרן";
-            this.manufacturer.Name = "manufacturer";
-            this.manufacturer.ReadOnly = true;
-            this.manufacturer.Width = 117;
-            // 
-            // showImage
-            // 
-            this.showImage.HeaderText = "תמונה";
-            this.showImage.Name = "showImage";
-            this.showImage.ReadOnly = true;
-            this.showImage.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.showImage.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.showImage.Width = 70;
-            // 
-            // product
-            // 
-            this.product.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.product.HeaderText = "מוצר";
-            this.product.Name = "product";
-            this.product.ReadOnly = true;
-            // 
-            // quantity
-            // 
-            this.quantity.HeaderText = "הזן כמות";
-            this.quantity.Name = "quantity";
-            this.quantity.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.quantity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.quantity.Width = 65;
-            // 
-            // check
-            // 
-            this.check.HeaderText = "סמן";
-            this.check.Name = "check";
-            this.check.Width = 50;
             // 
             // label1
             // 
@@ -386,6 +343,59 @@
             this.unSelectAllButton.UseVisualStyleBackColor = true;
             this.unSelectAllButton.Click += new System.EventHandler(this.unSelectAllButton_Click);
             // 
+            // Id
+            // 
+            this.Id.HeaderText = "מס\"ד";
+            this.Id.Name = "Id";
+            this.Id.ReadOnly = true;
+            this.Id.Width = 40;
+            // 
+            // manufacturer
+            // 
+            this.manufacturer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.manufacturer.HeaderText = "יצרן";
+            this.manufacturer.Name = "manufacturer";
+            this.manufacturer.ReadOnly = true;
+            this.manufacturer.Width = 117;
+            // 
+            // showImage
+            // 
+            this.showImage.HeaderText = "תמונה";
+            this.showImage.Name = "showImage";
+            this.showImage.ReadOnly = true;
+            this.showImage.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.showImage.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.showImage.Width = 70;
+            // 
+            // category
+            // 
+            this.category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.category.HeaderText = "קטגוריה";
+            this.category.Name = "category";
+            this.category.ReadOnly = true;
+            this.category.Width = 163;
+            // 
+            // product
+            // 
+            this.product.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.product.HeaderText = "מוצר";
+            this.product.Name = "product";
+            this.product.ReadOnly = true;
+            // 
+            // quantity
+            // 
+            this.quantity.HeaderText = "הזן כמות";
+            this.quantity.Name = "quantity";
+            this.quantity.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.quantity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.quantity.Width = 65;
+            // 
+            // check
+            // 
+            this.check.HeaderText = "סמן";
+            this.check.Name = "check";
+            this.check.Width = 50;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(240F, 240F);
@@ -445,12 +455,6 @@
         private System.Windows.Forms.Button saveAsExcelButton;
         private System.Windows.Forms.Button clearPriceComparisonResultsButton;
         private System.Windows.Forms.Label welcomeLabel;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn manufacturer;
-        private System.Windows.Forms.DataGridViewImageColumn showImage;
-        private System.Windows.Forms.DataGridViewTextBoxColumn product;
-        private System.Windows.Forms.DataGridViewTextBoxColumn quantity;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn check;
         private System.Windows.Forms.Button saveCartButton;
         private System.Windows.Forms.Button loadCartButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalPrice;
@@ -460,6 +464,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn chainId;
         private System.Windows.Forms.Button selectAllButton;
         private System.Windows.Forms.Button unSelectAllButton;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn manufacturer;
+        private System.Windows.Forms.DataGridViewImageColumn showImage;
+        private System.Windows.Forms.DataGridViewTextBoxColumn category;
+        private System.Windows.Forms.DataGridViewTextBoxColumn product;
+        private System.Windows.Forms.DataGridViewTextBoxColumn quantity;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn check;
     }
 }
 

@@ -106,6 +106,11 @@ namespace IsraeliSuperMarketWinFormsApp
             {
                 dataGridViewImageColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
+            var dataGridViewCtegoryColumn = productsDataGridView.Columns["category"];
+            if (dataGridViewCtegoryColumn != null)
+            {
+                dataGridViewCtegoryColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
         }
 
         private async void loadProductsButton_Click(object sender, EventArgs e)
@@ -140,9 +145,9 @@ namespace IsraeliSuperMarketWinFormsApp
 
         private void FillProductsDataGridView(IEnumerable<IProduct> products)
         {
-            foreach (var product1 in products)
+            foreach (var product1 in products.OrderBy(p => p.Category))
             {
-                productsDataGridView.Rows.Add(product1.Id, product1.Manufacturer, Resources.showimg, product1.Name, 1,
+                productsDataGridView.Rows.Add(product1.Id, product1.Manufacturer, Resources.showimg, product1.Category, product1.Name, 1,
                     0);
             }
         }
@@ -631,12 +636,12 @@ namespace IsraeliSuperMarketWinFormsApp
                     }
                     productsDataGridView.Rows.Clear();
                     productsDataGridView.Refresh();
-                    foreach (var product1 in _products)
+                    foreach (var product1 in _products.OrderBy(p => p.Category))
                     {
                         if (ids.Any(id => id == product1.Id))
                         {
                             productsDataGridView.Rows.Add(product1.Id, product1.Manufacturer, Resources.showimg,
-                                product1.Name, quantities[ids.IndexOf(product1.Id)],
+                                product1.Category, product1.Name, quantities[ids.IndexOf(product1.Id)],
                                 true);
                         }
                     }

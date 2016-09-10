@@ -8,6 +8,7 @@
         double Quantity { get; }
         double Price { get; }
         bool IsWeighted { get; }
+        string Category { get; }
         string ToString();
     }
 }
