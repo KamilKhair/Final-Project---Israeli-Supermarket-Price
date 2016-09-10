@@ -7,63 +7,144 @@ using System.Windows.Forms;
 using IsraeliSuperMarketManager;
 using IsraeliSuperMarketModels;
 using IsraeliSuperMarketWinFormsApp.Properties;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace IsraeliSuperMarketWinFormsApp
 {
     public partial class MainForm : Form
     {
         private readonly SuperMarketManager _manager = new SuperMarketManager();
-        private Tuple<Chain[], string[]> _compareResult;
-        private IProduct[] _products;
-        public MainForm()
+        private Tuple<IEnumerable<Chain>, IEnumerable<string>> _compareResult;
+        private IEnumerable<IProduct> _products;
+        private bool _isLoadingProducts;
+        private bool _isComparingPrices;
+        private readonly Form _logInForm;
+        private readonly IUser _user;
+        public MainForm(Form logInForm, IUser user)
         {
+            _logInForm = logInForm;
+            _user = user;
             InitializeComponent();
             InitializeCustomComponents();
         }
 
         private async void InitializeCustomComponents()
         {
+            welcomeLabel.Text += $@" {_user.FirstName}";
+            welcomeLabel.Text += $@" {_user.LastName}";
             loadProductsPictureBox.Visible = false;
             loadPricesPictureBox.Visible = false;
             smallLoadingPictureBox.Visible = false;
             productsDataGridView.MultiSelect = true;
-            MaximizeBox = false;
-            productsDataGridView.Columns["check"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            productsDataGridView.Columns["quantity"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            productsDataGridView.Columns["product"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            productsDataGridView.Columns["manufacturer"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            productsDataGridView.Columns["Id"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            productsDataGridView.Columns["showImage"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            resultDataGridView.Columns["chainId"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            resultDataGridView.Columns["chainName"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            resultDataGridView.Columns["min3Prices"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            resultDataGridView.Columns["max3Prices"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            resultDataGridView.Columns["totalPrice"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            InitializeProductsDataGridView();
+            InitializeResultDataGridView();
+            _isComparingPrices = false;
+            _isLoadingProducts = true;
             await LoadAllProducts();
+            _isLoadingProducts = false;
+        }
+
+        private void InitializeResultDataGridView()
+        {
+            var resultGridViewChainIdColumn = resultDataGridView.Columns["chainId"];
+            if (resultGridViewChainIdColumn != null)
+            {
+                resultGridViewChainIdColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            var resultGridViewNameColumn = resultDataGridView.Columns["chainName"];
+            if (resultGridViewNameColumn != null)
+            {
+                resultGridViewNameColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            var resultGridViewMinPricesColumn = resultDataGridView.Columns["min3Prices"];
+            if (resultGridViewMinPricesColumn != null)
+            {
+                resultGridViewMinPricesColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            var resultGridViewMaxPricesColumn = resultDataGridView.Columns["max3Prices"];
+            if (resultGridViewMaxPricesColumn != null)
+            {
+                resultGridViewMaxPricesColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            var resultGridViewTotalPriceColumn = resultDataGridView.Columns["totalPrice"];
+            if (resultGridViewTotalPriceColumn != null)
+            {
+                resultGridViewTotalPriceColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+        }
+
+        private void InitializeProductsDataGridView()
+        {
+            var dataGridViewCheckColumn = productsDataGridView.Columns["check"];
+            if (dataGridViewCheckColumn != null)
+            {
+                dataGridViewCheckColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            var dataGridViewQuantityColumn = productsDataGridView.Columns["quantity"];
+            if (dataGridViewQuantityColumn != null)
+            {
+                dataGridViewQuantityColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            var dataGridViewProductColumn = productsDataGridView.Columns["product"];
+            if (dataGridViewProductColumn != null)
+            {
+                dataGridViewProductColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            var dataGridViewManufacturerColumn = productsDataGridView.Columns["manufacturer"];
+            if (dataGridViewManufacturerColumn != null)
+            {
+                dataGridViewManufacturerColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            var dataGridViewIdColumn = productsDataGridView.Columns["Id"];
+            if (dataGridViewIdColumn != null)
+            {
+                dataGridViewIdColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            var dataGridViewImageColumn = productsDataGridView.Columns["showImage"];
+            if (dataGridViewImageColumn != null)
+            {
+                dataGridViewImageColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
         }
 
         private async void loadProductsButton_Click(object sender, EventArgs e)
         {
+            if (_isLoadingProducts)
+            {
+                MessageBox.Show(@"טוען מוצרים, נא להמתין");
+                return;
+            }
+            _isLoadingProducts = true;
             productsDataGridView.Rows.Clear();
             productsDataGridView.Refresh();
             await LoadAllProducts();
+            _isLoadingProducts = false;
         }
 
         private async Task LoadAllProducts()
         {
             loadProductsPictureBox.Visible = true;
             var products = await _manager.GetProductsAsync();
-            _products = products;
+            _products = products as IList<IProduct> ?? products.ToList();
+            FillProductsDataGridView(_products);
+            loadProductsPictureBox.Visible = false;
+        }
+
+        private void FillProductsDataGridView(IEnumerable<IProduct> products)
+        {
             foreach (var product1 in products)
             {
-                productsDataGridView.Rows.Add("הצג תמונה", product1.Id, product1.Manufacturer, product1.Name, 1, 0);
+                productsDataGridView.Rows.Add(Resources.showimgg, product1.Id, product1.Manufacturer, product1.Name, 1, 0);
             }
-            loadProductsPictureBox.Visible = false;
         }
 
         private async void compareButton_Click(object sender, EventArgs e)
         {
+            if(_isComparingPrices)
+            {
+                MessageBox.Show(@"מתבצעת השוואת מחירים, נא להמתין");
+                return;
+            }
             if (productsDataGridView.Rows.Count <= 0)
             {
                 MessageBox.Show(@"נא טען/טעני מוצרים קודם");
@@ -77,18 +158,27 @@ namespace IsraeliSuperMarketWinFormsApp
             {
                 return;
             }
+
+            _isComparingPrices = true;
             resultDataGridView.Rows.Clear();
             resultDataGridView.Refresh();
             loadPricesPictureBox.Visible = true;
             var result = await _manager.ComparePricesAsync(GetCheckedProducts());
             _compareResult = result;
+            FillResultDataGridView(result);
+            loadPricesPictureBox.Visible = false;
+            _isComparingPrices = false;
+            _isLoadingProducts = false;
+        }
+
+        private void FillResultDataGridView(Tuple<IEnumerable<Chain>, IEnumerable<string>> result)
+        {
             var i = 0;
             foreach (var chain in result.Item1)
             {
-                resultDataGridView.Rows.Add(result.Item2[i], "הצג", "הצג", chain.Name, chain.Id);
+                resultDataGridView.Rows.Add(result.Item2.ElementAt(i), Resources.show, Resources.show, chain.Name, chain.Id);
                 ++i;
             }
-            loadPricesPictureBox.Visible = false;
         }
 
         private bool IsAnyWrongQuantity()
@@ -102,30 +192,27 @@ namespace IsraeliSuperMarketWinFormsApp
                     MessageBox.Show($@"Wrong Quantity of product id = {row.Cells["Id"].Value}");
                     return false;
                 }
-                else
-                {
-                    int intQuantity;
-                    if (int.TryParse(row.Cells["quantity"].Value.ToString(), out intQuantity)) continue;
-                    MessageBox.Show($@"Wrong Quantity of product id = {row.Cells["Id"].Value}");
-                    return false;
-                }
+                int intQuantity;
+                if (int.TryParse(row.Cells["quantity"].Value.ToString(), out intQuantity)) continue;
+                MessageBox.Show($@"Wrong Quantity of product id = {row.Cells["Id"].Value}");
+                return false;
             }
             return true;
         }
 
-        private Product[] GetCheckedProducts()
+        private IEnumerable<Product> GetCheckedProducts()
         {
-            var products = new List<Product>();
-            foreach (DataGridViewRow row in productsDataGridView.Rows)
-            {
-                var cell = row.Cells["check"] as DataGridViewCheckBoxCell;
-                var isChecked = cell != null && (cell.Value as bool? ?? false);
-                if (!isChecked) continue;
-                var id = int.Parse(row.Cells["Id"].Value.ToString());
-                var productQuantity = double.Parse(row.Cells["quantity"].Value.ToString());
-                products.Add(new Product { Id = id , Name = row.Cells["product"].Value.ToString(), Manufacturer = row.Cells["manufacturer"].Value.ToString(), Quantity = productQuantity });
-            }
-            return products.ToArray();
+            return (from DataGridViewRow row in productsDataGridView.Rows
+                    let cell = row.Cells["check"] as DataGridViewCheckBoxCell
+                    let isChecked = cell != null && (cell.Value as bool? ?? false)
+                    where isChecked
+                    select new Product
+                    {
+                        Id = int.Parse(row.Cells["Id"].Value.ToString()),
+                        Name = row.Cells["product"].Value.ToString(),
+                        Manufacturer = row.Cells["manufacturer"].Value.ToString(),
+                        Quantity = double.Parse(row.Cells["quantity"].Value.ToString())
+                    }).ToArray();
         }
 
         private bool IsAnyProductChecked()
@@ -151,23 +238,23 @@ namespace IsraeliSuperMarketWinFormsApp
             }
             smallLoadingPictureBox.Visible = true;
             var imageName = productsDataGridView.Rows[e.RowIndex].Cells["Id"].Value.ToString();
-            using (var form = new Form())
+            using (var imageForm = new Form())
             {
                 var image = await _manager.GetImageAsync(int.Parse(imageName));
-                form.StartPosition = FormStartPosition.CenterScreen;
-                form.Size = new Size(image.Width, image.Height +40);
-                form.MaximumSize = form.Size;
-                form.MinimumSize = form.Size;
-                form.MaximizeBox = false;
-                form.Icon = Resources.icon;
+                imageForm.StartPosition = FormStartPosition.CenterScreen;
+                imageForm.Size = new Size(image.Width, image.Height + 40);
+                imageForm.MaximumSize = imageForm.Size;
+                imageForm.MinimumSize = imageForm.Size;
+                imageForm.MaximizeBox = false;
+                imageForm.Icon = Resources.icon;
                 var pb = new PictureBox
                 {
                     Dock = DockStyle.Fill,
                     Image = image
                 };
-                form.Controls.Add(pb);
+                imageForm.Controls.Add(pb);
                 smallLoadingPictureBox.Visible = false;
-                form.ShowDialog();
+                imageForm.ShowDialog();
             }
         }
 
@@ -180,37 +267,244 @@ namespace IsraeliSuperMarketWinFormsApp
                 return;
             }
             var id = int.Parse(resultDataGridView.Rows[e.RowIndex].Cells["chainId"].Value.ToString());
-            using (var form = new Form())
+            var nameOfChain = resultDataGridView.Rows[e.RowIndex].Cells["chainName"].Value.ToString();
+            ShowPricesForm(e, dataGridViewMax3Column, id, nameOfChain);
+        }
+
+        private void ShowPricesForm(DataGridViewCellEventArgs e, DataGridViewBand dataGridViewMax3Column, int id, string nameOfChain)
+        {
+            using (var pricesForm = new Form())
             {
-                form.StartPosition = FormStartPosition.CenterScreen;
-                form.Size = new Size(600, 300);
-                form.MaximumSize = form.Size;
-                form.MinimumSize = form.Size;
-                form.MaximizeBox = false;
-                form.Icon = Resources.icon;
-                var tb = new RichTextBox
+                pricesForm.StartPosition = FormStartPosition.CenterScreen;
+                pricesForm.AutoSize = true;
+                pricesForm.MaximizeBox = false;
+                pricesForm.Icon = Resources.icon;
+
+                var idCol = new DataGridViewTextBoxColumn
                 {
-                    Text = string.Empty,
+                    HeaderText = @"מס""ד",
                     ReadOnly = true,
-                    Size = new Size(575, 265),
-                    Location = new Point(5, 5)
-            };
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                };
+                var nameCol = new DataGridViewTextBoxColumn
+                {
+                    HeaderText = @"שם מוצר",
+                    ReadOnly = true,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                };
+                var quantityCol = new DataGridViewTextBoxColumn
+                {
+                    HeaderText = @"כמות",
+                    ReadOnly = true,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                };
+                var priceCol = new DataGridViewTextBoxColumn
+                {
+                    HeaderText = @"מחיר",
+                    ReadOnly = true,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                };
+
+                var pricesDataGridView = new DataGridView
+                {
+                    AllowUserToAddRows = false,
+                    AllowUserToDeleteRows = false,
+                    BackgroundColor = SystemColors.Control,
+                    ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+                };
+                pricesDataGridView.Columns.AddRange(priceCol, quantityCol, nameCol, idCol);
+                pricesDataGridView.Location = new Point(3, 3);
+                pricesDataGridView.Margin = new Padding(8, 7, 8, 7);
+                pricesDataGridView.RightToLeft = RightToLeft.No;
+                pricesDataGridView.TabIndex = 1;
                 if (dataGridViewMax3Column?.Index == e.ColumnIndex)
                 {
-                    foreach (var p in _compareResult.Item1.Single(chain => chain.Id == id).Max3Products)
+                    pricesForm.Text = @"המוצרים היקרים" + $@" - {nameOfChain}";
+                    foreach (var p in _compareResult.Item1.Single(chain => chain.Id == id).Products.OrderByDescending(p => p.Price).Take(3))
                     {
-                        tb.Text += $"Id = {p.Id},          Name = {p.Name},          Price = {p.Price}\n";
+                        pricesDataGridView.Rows.Add(p.Price, p.Quantity, p.Name, p.Id);
                     }
                 }
                 else
                 {
-                    foreach (var p in _compareResult.Item1.Single(chain => chain.Id == id).Min3Products)
+                    pricesForm.Text = @"המוצרים הזולים" + $@" - {nameOfChain}";
+                    foreach (var p in _compareResult.Item1.Single(chain => chain.Id == id).Products.OrderBy(p => p.Price).Take(3))
                     {
-                        tb.Text += $"Id = {p.Id},          Name = {p.Name},          Price = {p.Price}\n";
+                        pricesDataGridView.Rows.Add(p.Price, p.Quantity, p.Name, p.Id);
                     }
                 }
-                form.Controls.Add(tb);
-                form.ShowDialog();
+                pricesDataGridView.Size = new Size(idCol.Width + nameCol.Width + quantityCol.Width + priceCol.Width + 15, pricesDataGridView.Rows.Count*28 +28);
+                pricesForm.Controls.Add(pricesDataGridView);
+                pricesForm.Size = pricesDataGridView.Size;
+                pricesForm.ShowDialog();
+            }
+        }
+
+        private void saveAsExcelButton_Click(object sender, EventArgs e)
+        {
+            if (resultDataGridView.Rows.Count <= 0)
+            {
+                MessageBox.Show(@"נא בצעו פעולת השוואת מחירים קודם");
+                return;
+            }
+            var sfd = new SaveFileDialog
+            {
+                Filter = @"Excel files (*.xls)|*.xls|All files (*.*)|*.*",
+                Title = @"Save an Excel File",
+                FilterIndex = 1,
+                RestoreDirectory = true,
+                FileName = "ISMC-Graph",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+            };
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                SaveExcelFile(sfd);
+            }
+        }
+
+        private void SaveExcelFile(FileDialog sfd)
+        {
+            if (sfd.FileName.Length <= 0)
+            {
+                return;
+            }
+
+            Task.Factory.StartNew(() =>
+            {
+                object misValue = System.Reflection.Missing.Value;
+                var xlApp = new Excel.Application();
+                var xlWorkBook = xlApp.Workbooks.Add(misValue);
+
+                AddAllChainsSheet(xlWorkBook);
+
+                var chainColN = 2;
+                foreach (var chain in _compareResult.Item1)
+                {
+                    AddNewChainSheet(xlWorkBook, chainColN, chain);
+                    ++chainColN;
+                }
+
+                xlWorkBook.SaveAs(sfd.FileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue,
+                    misValue,
+                    Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+            });
+        }
+
+        private void AddAllChainsSheet(Excel._Workbook xlWorkBook)
+        {
+            var xlWorkSheet = (Excel.Worksheet) xlWorkBook.Worksheets.Item[1];
+            xlWorkSheet.Name = "כל הרשתות";
+
+            xlWorkSheet.Cells[1, 1] = "";
+            var chainCol = 2;
+            foreach (var chain in _compareResult.Item1)
+            {
+                xlWorkSheet.Cells[1, chainCol] = chain.Name;
+                var i = 2;
+                foreach (var productInChain in chain.Products)
+                {
+                    xlWorkSheet.Cells[i, 1] = productInChain.Name;
+                    xlWorkSheet.Cells[i, chainCol] = productInChain.Price;
+                    ++i;
+                }
+                chainCol++;
+            }
+            var xlCharts = (Excel.ChartObjects) xlWorkSheet.ChartObjects(Type.Missing);
+            var myChart = xlCharts.Add(230, 1, 500, 450);
+            var chartPage = myChart.Chart;
+            var productsRange = "D" + (_compareResult.Item1.ElementAt(0).Products.Count() + 1);
+            var chartRange = xlWorkSheet.Range["A1", productsRange];
+            chartPage.ChartWizard(chartRange, Title: "כל הרשתות", ValueTitle: "מחיר");
+            chartPage.ChartType = Excel.XlChartType.xl3DBarClustered;
+        }
+
+        private void AddNewChainSheet(Excel._Workbook xlWorkBook, int chainColN, IChain chain)
+        {
+            xlWorkBook.Sheets.Add(After: xlWorkBook.Sheets[xlWorkBook.Sheets.Count]);
+            var xlWorkSheetN = (Excel.Worksheet)xlWorkBook.Worksheets.Item[chainColN];
+            xlWorkSheetN.Name = chain.Name;
+            xlWorkSheetN.Cells[1, 1] = "";
+            xlWorkSheetN.Cells[1, 2] = chain.Name;
+            var i = 2;
+            var productsOrderedByPrice = chain.Products.OrderBy(p => p.Price);
+            foreach (var productInChain in productsOrderedByPrice)
+            {
+                xlWorkSheetN.Cells[i, 1] = productInChain.Name;
+                xlWorkSheetN.Cells[i, 2] = productInChain.Price;
+                ++i;
+            }
+            var xlChartsN = (Excel.ChartObjects)xlWorkSheetN.ChartObjects(Type.Missing);
+            var myChartN = xlChartsN.Add(230, 1, 500, 450);
+            var chartPageN = myChartN.Chart;
+            var productsRangeN = "B" + (_compareResult.Item1.ElementAt(chainColN - 2).Products.Count() + 1);
+            var chartRangeN = xlWorkSheetN.Range["A1", productsRangeN];
+            chartPageN.ChartWizard(chartRangeN, Title: chain.Name, ValueTitle: "מחיר");
+            chartPageN.ChartType = Excel.XlChartType.xl3DBarClustered;
+        }
+
+        private void clearPriceComparisonResultsButton_Click(object sender, EventArgs e)
+        {
+            resultDataGridView.Rows.Clear();
+            resultDataGridView.Refresh();
+        }
+
+        private void productsDataGridView_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex < 0)
+            {
+                return;
+            }
+            productsDataGridView.Cursor = 
+                productsDataGridView.Columns[e.ColumnIndex] == productsDataGridView.Columns["showImage"] 
+                ? 
+                Cursors.Hand 
+                : 
+                Cursors.Default;
+        }
+
+        private void productsDataGridView_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            productsDataGridView.Cursor = Cursors.Default;
+        }
+
+        private void resultDataGridView_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex < 0)
+            {
+                return;
+            }
+            var max3PricesCol = resultDataGridView.Columns["max3Prices"];
+            var min3PricesCol = resultDataGridView.Columns["min3Prices"];
+            resultDataGridView.Cursor =
+                min3PricesCol != null && max3PricesCol != null && (e.ColumnIndex == max3PricesCol.Index || e.ColumnIndex == min3PricesCol.Index)
+                ?
+                Cursors.Hand
+                :
+                Cursors.Default;
+        }
+
+        private void resultDataGridView_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            resultDataGridView.Cursor = Cursors.Default;
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            var dr = MessageBox.Show(@"? האם את\ה רוצה להתחבר מחדש",
+                      @"יציאה", MessageBoxButtons.YesNo);
+            switch (dr)
+            {
+                case DialogResult.Yes:
+                    _logInForm.Show();
+                    break;
+                case DialogResult.No:
+                    _logInForm.Close();
+                    _logInForm.Dispose();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

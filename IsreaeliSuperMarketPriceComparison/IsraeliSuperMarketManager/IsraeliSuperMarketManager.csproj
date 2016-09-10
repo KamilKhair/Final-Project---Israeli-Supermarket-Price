@@ -48,10 +48,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IsraeliSuperMarketEngine\IsraeliSuperMarketEngine.csproj">
-      <Project>{28f9b441-5297-4ffe-9906-cb73bdfa6542}</Project>
-      <Name>IsraeliSuperMarketEngine</Name>
-    </ProjectReference>
     <ProjectReference Include="..\IsraeliSuperMarketModels\IsraeliSuperMarketModels.csproj">
       <Project>{e63489c2-22f0-43e1-9994-6ef82c3cb1ef}</Project>
       <Name>IsraeliSuperMarketModels</Name>

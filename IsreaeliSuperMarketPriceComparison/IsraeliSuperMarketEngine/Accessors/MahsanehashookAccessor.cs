@@ -8,7 +8,7 @@ namespace IsraeliSuperMarketEngine.Accessors
     {
         internal string GetPriceById(string id)
         {
-            var items = XElement.Load(@"D:/MahsaneHashook.xml");
+            var items = XElement.Load(@"D:/ISMC/Data/MahsaneHashook.xml");
             var item = items
                 .XPathSelectElements("./Products/Product/ItemCode")
                 .Where(x => x.Value == id)

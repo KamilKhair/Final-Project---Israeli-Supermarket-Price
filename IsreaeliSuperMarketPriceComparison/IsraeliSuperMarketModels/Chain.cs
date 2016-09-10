@@ -14,10 +14,7 @@ namespace IsraeliSuperMarketModels
         public string Name { get; set; }
 
         [DataMember]
-        public IEnumerable<Product> Max3Products { get; set; }
-        [DataMember]
-        public IEnumerable<Product> Min3Products { get; set; }
-
+        public IEnumerable<Product> Products { get; set; }
         public bool Equals(Chain other)
         {
             return Id == other.Id;

@@ -7,7 +7,6 @@ namespace IsraeliSuperMarketModels
     {
         int Id { get; }
         string Name { get; }
-        IEnumerable<Product> Max3Products { get; }
-        IEnumerable<Product> Min3Products { get; }
+        IEnumerable<Product> Products { get; }
     }
 }

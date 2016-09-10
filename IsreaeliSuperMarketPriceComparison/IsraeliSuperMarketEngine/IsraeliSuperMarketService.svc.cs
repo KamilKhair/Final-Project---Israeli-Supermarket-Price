@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
@@ -11,37 +12,43 @@ namespace IsraeliSuperMarketEngine
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class IsraeliSuperMarketService
     {
-        private MyDataAccessor _service;
-        private MyDataAccessor Service => _service ?? (_service = new MyDataAccessor());
+        private MyDataAccessor _dataAccess;
+        private MyDataAccessor DataAccess => _dataAccess ?? (_dataAccess = new MyDataAccessor());
 
         [WebGet(UriTemplate = "/Products")]
-        public Product[] GetProducts()
+        public IEnumerable<Product> GetProducts()
         {
-            return Service.GetProducts();
+            return DataAccess.GetProducts();
         }
 
         [WebGet(UriTemplate = "/Product/{productId}")]
-        public Product GetProduct(string productId)
+        public IProduct GetProduct(string productId)
         {
-            return Service.GetProduct(productId);
+            return DataAccess.GetProduct(productId);
         }
 
         [WebGet(UriTemplate = "/Chains")]
-        public Chain[] GetChains()
+        public IEnumerable<IChain> GetChains()
         {
-            return Service.GetChains();
+            return DataAccess.GetChains();
         }
 
         [WebGet(UriTemplate = "/Image/{imageId}")]
         public string GetImage(string imageId)
         {
-           return Service.GetImage(int.Parse(imageId));
+           return DataAccess.GetImage(int.Parse(imageId));
         }
 
         [WebInvoke(UriTemplate = "/Compare")]
-        public Tuple<Chain[], string[]> ComparePrices(Product[] products)
+        public Tuple<IEnumerable<Chain>, IEnumerable<string>> ComparePrices(IEnumerable<Product> products)
         {
-            return Service.ComparePrices(products);
+            return DataAccess.ComparePrices(products);
+        }
+
+        [WebInvoke(UriTemplate = "/LogIn")]
+        public Tuple<User, bool, string> LoagIn(User user)
+        {
+            return DataAccess.LogIn(user);
         }
     }
 }

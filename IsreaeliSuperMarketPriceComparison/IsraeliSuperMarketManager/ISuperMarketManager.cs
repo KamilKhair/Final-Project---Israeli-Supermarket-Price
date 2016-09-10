@@ -8,10 +8,11 @@ namespace IsraeliSuperMarketManager
 {
     public interface ISuperMarketManager
     {
-        Task<IProduct[]> GetProductsAsync();
+        Task<IEnumerable<IProduct>> GetProductsAsync();
         Task<IProduct> GetProductAsync(int productId);
-        Task<IChain[]> GetChainsAsync();
-        Task<Tuple<Chain[], string[]>> ComparePricesAsync(Product[] products);
+        Task<IEnumerable<IChain>> GetChainsAsync();
+        Task<Tuple<IEnumerable<Chain>, IEnumerable<string>>> ComparePricesAsync(IEnumerable<Product> products);
         Task<Bitmap> GetImageAsync(int imageId);
+        Task<Tuple<User, bool, string>> LogInAsync(IUser user);
     }
 }

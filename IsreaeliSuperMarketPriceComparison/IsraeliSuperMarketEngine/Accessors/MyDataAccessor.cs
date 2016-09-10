@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using IsraeliSuperMarketEngine.Extensions;
 using IsraeliSuperMarketModels;
 
@@ -16,13 +18,19 @@ namespace IsraeliSuperMarketEngine.Accessors
         private RamiLeviAccessor _ramiLeviAccessor;
         private RamiLeviAccessor RamiLeviAccessor => _ramiLeviAccessor ?? (_ramiLeviAccessor = new RamiLeviAccessor());
         private MahsaneHashookAccessor _mahsanehashookAccessor;
-        private MahsaneHashookAccessor MahsanehashookAccessor => _mahsanehashookAccessor ?? (_mahsanehashookAccessor = new MahsaneHashookAccessor());
+
+        private MahsaneHashookAccessor MahsanehashookAccessor
+            => _mahsanehashookAccessor ?? (_mahsanehashookAccessor = new MahsaneHashookAccessor());
+
         private ShopersalAccessor _shopersalAccessor;
-        private ShopersalAccessor ShopersalAccessor => _shopersalAccessor ?? (_shopersalAccessor = new ShopersalAccessor());
-        public Product[] GetProducts()
+
+        private ShopersalAccessor ShopersalAccessor
+            => _shopersalAccessor ?? (_shopersalAccessor = new ShopersalAccessor());
+
+        public IEnumerable<Product> GetProducts()
         {
             var xmlDocument = new XmlDocument();
-            xmlDocument.Load(@"D:/Products.xml");
+            xmlDocument.Load(@"D:/ISMC/Data/Products.xml");
             if (xmlDocument.DocumentElement == null)
             {
                 return null;
@@ -42,12 +50,12 @@ namespace IsraeliSuperMarketEngine.Accessors
                     };
                 }
             }
-            return products;
+            return products.AsEnumerable();
         }
 
         public Product GetProduct(string productId)
         {
-            var products = XElement.Load(@"D:/Products.xml");
+            var products = XElement.Load(@"D:/ISMC/Data/Products.xml");
             var product = products.Elements("Product").Single(element => element.Attribute("Id").Value == productId);
             return new Product
             {
@@ -60,7 +68,7 @@ namespace IsraeliSuperMarketEngine.Accessors
         public Chain[] GetChains()
         {
             var xmlDocument = new XmlDocument();
-            xmlDocument.Load(@"D:/Chains.xml");
+            xmlDocument.Load(@"D:/ISMC/Data/Chains.xml");
             if (xmlDocument.DocumentElement == null)
             {
                 return null;
@@ -75,8 +83,7 @@ namespace IsraeliSuperMarketEngine.Accessors
                     {
                         Id = int.Parse(node.Attributes["Id"].InnerText),
                         Name = node.Attributes["Name"].InnerText,
-                        Max3Products = null,
-                        Min3Products = null
+                        Products = null
                     };
                 }
             }
@@ -85,22 +92,22 @@ namespace IsraeliSuperMarketEngine.Accessors
 
         public string GetImage(int imageId)
         {
-            Bitmap image;
             try
             {
-                var imagePath = @"D:\pictures\" + imageId + ".bmp";
-                image = (Bitmap) Image.FromFile(imagePath, true);
+                using (var image = (Bitmap) Image.FromFile(@"D:\ISMC\pictures\" + imageId + ".bmp", true))
+                {
+                    return image.ToBase64String(ImageFormat.Bmp);
+                }
             }
-            catch(Exception)
+            catch (Exception ex)
             {
-                return null;
+                throw new FileNotFoundException(@"Image D:\ISMC\pictures\" + imageId + ".bmp Not Found", ex);
             }
-            return image.ToBase64String(ImageFormat.Bmp);
         }
 
-        public Tuple<Chain[], string[]> ComparePrices(Product[] products)
+        public Tuple<IEnumerable<Chain>, IEnumerable<string>> ComparePrices(IEnumerable<Product> products)
         {
-            var catalog = XElement.Load(@"D:/Products.xml");
+            var catalog = XElement.Load(@"D:/ISMC/Data/Products.xml");
             var ramiLeviPrices = new List<Product>();
             var mahsaneHashookPrices = new List<Product>();
             var shopersalPrices = new List<Product>();
@@ -144,38 +151,58 @@ namespace IsraeliSuperMarketEngine.Accessors
                 ++i;
             }
 
-            var resultChains = new[]
+            var resultChains = new List<Chain>()
             {
                 new Chain
                 {
                     Name = "רמי לוי",
                     Id = 1,
-                    Max3Products = ramiLeviPrices.OrderByDescending(p => p.Price).Take(3),
-                    Min3Products = ramiLeviPrices.OrderBy(p => p.Price).Take(3)
+                    Products = ramiLeviPrices
                 },
                 new Chain
                 {
                     Name = "מחסני השוק",
                     Id = 2,
-                    Max3Products = mahsaneHashookPrices.OrderByDescending(p => p.Price).Take(3),
-                    Min3Products = mahsaneHashookPrices.OrderBy(p => p.Price).Take(3)
+                    Products = mahsaneHashookPrices
                 },
 
                 new Chain
                 {
                     Name = "שופרסל",
                     Id = 3,
-                    Max3Products = shopersalPrices.OrderByDescending(p => p.Price).Take(3),
-                    Min3Products = shopersalPrices.OrderBy(p => p.Price).Take(3)
+                    Products = shopersalPrices
                 }
             };
-            var resultPrices = new[]
+            var resultPrices = new List<string>()
             {
                 ramiLeviPrices.Sum(p => p.Price).ToString(CultureInfo.InvariantCulture),
                 mahsaneHashookPrices.Sum(p => p.Price).ToString(CultureInfo.InvariantCulture),
                 shopersalPrices.Sum(p => p.Price).ToString(CultureInfo.InvariantCulture)
             };
-            return Tuple.Create(resultChains, resultPrices);
+            return Tuple.Create(resultChains.AsEnumerable(), resultPrices.AsEnumerable());
+        }
+
+        public Tuple<User, bool, string> LogIn(User user)
+        {
+            var users = XElement.Load(@"D:/ISMC/Data/Users.xml");
+            var usersList = users.Elements("User").Select(us => new User {FirstName = us.Attribute("FirstName").Value, LastName = us.Attribute("LastName").Value, UserName = us.Attribute("UserName").Value, Password = us.Attribute("Password").Value}).ToList();
+            if (!usersList.Contains(user))
+            {
+                return Tuple.Create(new User(), false, "שם משתמש לא קיים");
+            }
+            var storedUser = usersList.Single(us => us.UserName.Equals(user.UserName));
+            if (!storedUser.Password.Equals(user.Password))
+            {
+                return Tuple.Create(new User(), false, "סיסמה שגויה");
+            }
+            var resultUser = new User
+            {
+                FirstName = storedUser.FirstName,
+                LastName = storedUser.LastName,
+                UserName = storedUser.UserName,
+                Password = string.Empty
+            };
+            return Tuple.Create(resultUser, true, "התחברת בהצלחה");
         }
     }
 }
