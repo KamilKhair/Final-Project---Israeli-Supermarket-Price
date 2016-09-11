@@ -1,0 +1,5 @@
+Please extract the ISMC.rar file into your D:/ drive.
+You should have the following two paths:
+
+D:\ISMC\Data      - here is where all the XML files are located at the server side.
+D:\ISMC\pictures  - here is where all the pictures of the products are located at the server side.
