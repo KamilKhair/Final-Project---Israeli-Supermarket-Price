@@ -12,6 +12,16 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace IsraeliSuperMarketWinFormsApp
 {
+    /**
+    * When creating a UI application- consider one of the following paradigms: MVC, MVP or MVVM
+    * It is best to refrain from coding in the codebehind of the UI class.
+    * This enables better testability and separation of UI from User interaction and Business Logic.
+    * 
+    * Consider :
+    * a) https://he.wikipedia.org/wiki/Model_View_Controller
+    * b) https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter
+    * c) https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel
+    */
     public partial class MainForm : Form
     {
         private readonly SuperMarketManager _manager = new SuperMarketManager();

@@ -18,6 +18,7 @@ namespace IsraeliSuperMarketManager
             IEnumerable<IProduct> responseObject = null;
             return Task.Factory.StartNew(() =>
             {
+                //hardcoding anything is bad, since it will require compilation to change- consider configuration for such things as server URI.
                 var request = (HttpWebRequest)WebRequest.Create("http://localhost:20997/IsraeliSuperMarketService.svc/Products");
                 request.Accept = "application/json";
                 request.ContentType = "application/json";
@@ -37,6 +38,8 @@ namespace IsraeliSuperMarketManager
             IProduct responseObject = null;
             return Task.Factory.StartNew(() =>
             {
+                //Repeating string literals (constants) is problematic- think about what will happen when you need to change the base URI?
+                //Change should be limited to a single string constant, with varying postfixes.
                 var url = "http://localhost:20997/IsraeliSuperMarketService.svc/Product/" + productId;
                 var client = new WebClient();
                 client.Headers.Add("Accept", "application/json");
@@ -61,6 +64,7 @@ namespace IsraeliSuperMarketManager
                 var serializer = new DataContractJsonSerializer(typeof(IEnumerable<Product>));
                 var requestStream = request.GetRequestStream();
                 serializer.WriteObject(requestStream, products);
+                //Why is this not inside a using statement? There's no guarantee that this line will ever execute.
                 requestStream.Close();
                 var response = request.GetResponse();
                 var responseStream = response.GetResponseStream();

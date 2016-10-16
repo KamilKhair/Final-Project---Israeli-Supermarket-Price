@@ -17,6 +17,7 @@ namespace IsraeliSuperMarketModels
         public IEnumerable<Product> Products { get; set; }
         public bool Equals(Chain other)
         {
+            //What happens if "other" is null?
             return Id == other.Id;
         }
         public override string ToString()

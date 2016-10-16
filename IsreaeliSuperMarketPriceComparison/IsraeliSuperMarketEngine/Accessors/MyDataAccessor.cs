@@ -12,6 +12,10 @@ using IsraeliSuperMarketModels;
 
 namespace IsraeliSuperMarketEngine.Accessors
 {
+    /*
+     * Usually, when you can not choose a name for a class, it means that it does not follow the single responsibility principle
+     * Consider: https://en.wikipedia.org/wiki/Single_responsibility_principle
+     */
     public class MyDataAccessor
     {
         private RamiLeviAccessor _ramiLeviAccessor;
@@ -78,6 +82,9 @@ namespace IsraeliSuperMarketEngine.Accessors
 
         public Tuple<IEnumerable<Chain>, IEnumerable<string>> ComparePrices(IEnumerable<Product> products)
         {
+            /*Try refactoring long methods into smaller, "mission specific" methods
+             * This will improve readability, testability, maintainability and debugability.
+             */
             var catalog = XElement.Load(@"D:/ISMC/Data/Products.xml");
             var ramiLeviPrices = new List<Product>();
             var mahsaneHashookPrices = new List<Product>();
@@ -158,6 +165,7 @@ namespace IsraeliSuperMarketEngine.Accessors
                 }
             }
 
+            //Why limit your model to only three chains when you can dynamically load from whatever information there is?
             var resultChains = new List<Chain>()
             {
                 new Chain
